@@ -1,0 +1,28 @@
+{
+  "name": "onboard-matheus-molina-backend",
+  "version": "1.0.0",
+  "description": "## Project Description This is part of my second OnBoarding for the company, this time as a Back-end engineering.  Just part of the training",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/indigotech/onboard-matheus-molina-backend.git"
+  },
+  "keywords": [
+    "onboard",
+    "backend"
+  ],
+  "author": "Matheus Molina",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/indigotech/onboard-matheus-molina-backend/issues"
+  },
+  "homepage": "https://github.com/indigotech/onboard-matheus-molina-backend#readme",
+  "dependencies": {
+    "express": "4.18.1",
+    "express-graphql": "0.12.0",
+    "graphql": "16.4.0"
+  }
+}
