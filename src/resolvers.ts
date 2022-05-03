@@ -1,11 +1,20 @@
+import { AppDataSource } from "./data-source";
 import { books } from "./database";
+import { User } from "./entity/User";
 
 export const resolvers = {
   Query: {
     books: () => books,
   },
   Mutation: {
-    createUser: (data: any) => MOCK_USER,
+    createUser: async (_: any, { data }: any) => {
+      const newUser = new User();
+      newUser.firstName = data.name;
+      newUser.birthDate = data.birthDate;
+      newUser.email = data.email;
+      await AppDataSource.manager.save(newUser);
+      return newUser;
+    },
   },
 };
 
