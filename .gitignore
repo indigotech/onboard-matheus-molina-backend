@@ -1,5 +1,8 @@
-# node.js
-#
+.idea/
+.vscode/
 node_modules/
+build/
+tmp/
+temp/
 npm-debug.log
 yarn-error.log
