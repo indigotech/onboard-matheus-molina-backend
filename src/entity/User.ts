@@ -13,6 +13,9 @@ export class User {
     email!: string
 
     @Column()
-    birthDate!: String
+    birthDate!: string
+
+    @Column()
+    password!: string;
 
 }
