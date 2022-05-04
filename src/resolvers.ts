@@ -33,6 +33,8 @@ export const resolvers = {
       newUser.firstName = data.name;
       newUser.birthDate = data.birthDate;
       newUser.email = data.email;
+      newUser.password = hashedPassword.hashedPassword;
+      newUser.salt = hashedPassword.salt;
       await AppDataSource.manager.save(newUser);
       return newUser;
     },
