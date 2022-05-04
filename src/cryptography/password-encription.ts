@@ -1,4 +1,4 @@
-import * as crypto from 'crypto'
+import * as crypto from "crypto";
 
 export function hashPassword({
   password,
@@ -7,9 +7,9 @@ export function hashPassword({
   password: string;
   algorithm: string;
 }) {
+  const salt = crypto.randomBytes(16).toString("hex");
   const hash = crypto.createHash(algorithm);
-  hash.update(password);
+  hash.update(salt + password);
   const hashedPassword = hash.digest("hex");
-  console.log(hashedPassword);
-  return hashedPassword;
+  return { hashedPassword, salt };
 }
