@@ -1,3 +1,4 @@
+import { hashPassword } from "./cryptography/password-encription";
 import { AppDataSource } from "./data-source";
 import { books } from "./database";
 import { User } from "./entity/User";
@@ -12,6 +13,10 @@ export const resolvers = {
     createUser: async (_: any, { data }: any) => {
       const validPassword = validatePassword(data.password);
       const repeatedEmail = await isRepeatedEmail(data.email);
+      const hashedPassword = hashPassword({
+        password: data.password,
+        algorithm: "sha256",
+      });
 
       if (!validPassword) {
         throw new Error(
@@ -23,7 +28,7 @@ export const resolvers = {
           "This email has already been registered by another user"
         );
       }
-      
+
       const newUser = new User();
       newUser.firstName = data.name;
       newUser.birthDate = data.birthDate;
