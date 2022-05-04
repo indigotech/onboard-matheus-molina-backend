@@ -1,5 +1,5 @@
 localdb:
-  image: postgres:11.2
+  image: postgres:14.0
   ports:
     - "5432:5432"
   volumes:
@@ -10,7 +10,7 @@ localdb:
     - POSTGRES_DB=database-local
 
 testdb:
-  image: postgres:11.2
+  image: postgres:14.0
   ports:
     - "5433:5432"
   volumes:
