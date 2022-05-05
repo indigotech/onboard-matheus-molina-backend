@@ -1,6 +1,8 @@
 import axios from "axios";
+import { expect } from "chai";
 import * as dotenv from "dotenv";
 import { before, describe, it } from "mocha";
+import { books } from "../src/database";
 import { setup } from "../src/setup";
 
 describe("Test", () => {
@@ -9,7 +11,7 @@ describe("Test", () => {
     await setup();
   });
 
-  it("Should create User", async () => {
+  it("Should get books", async () => {
     const response = await axios.post("http://localhost:4001/graphql", {
       operationName: null,
       variables: {},
@@ -22,5 +24,6 @@ describe("Test", () => {
           }
         `,
     });
+    expect(response.data.data.books).to.be.deep.eq(books);
   });
 });
