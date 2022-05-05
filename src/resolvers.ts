@@ -13,10 +13,6 @@ export const resolvers = {
     createUser: async (_: any, { data }: any) => {
       const validPassword = validatePassword(data.password);
       const repeatedEmail = await isRepeatedEmail(data.email);
-      const hashedPassword = hashPassword({
-        password: data.password,
-        algorithm: "sha256",
-      });
 
       if (!validPassword) {
         throw new Error(
@@ -28,6 +24,10 @@ export const resolvers = {
           "This email has already been registered by another user"
         );
       }
+
+      const hashedPassword = hashPassword({
+        password: data.password,
+      });
 
       const newUser = new User();
       newUser.firstName = data.name;
