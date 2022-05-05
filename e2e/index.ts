@@ -5,7 +5,6 @@ import { setup } from "../src/setup";
 
 describe("Test", () => {
   before(async () => {
-    console.log("entering before");
     dotenv.config({ path: __dirname + "/../test.env" });
     await setup();
   });
@@ -23,6 +22,5 @@ describe("Test", () => {
           }
         `,
     });
-    console.log(response.data);
   });
 });
