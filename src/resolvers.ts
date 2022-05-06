@@ -29,7 +29,6 @@ export const resolvers = {
         password: data.password,
       });
 
-      const AppDataSource = await ConfigAppDataSource()
       const newUser = new User();
       newUser.name = data.name;
       newUser.birthDate = data.birthDate;
