@@ -25,7 +25,6 @@ describe("Test", async () => {
 
   it("Should Create User", async () => {
     const response = await createUserMutation(TEST_VARIABLE);
-    console.log(response.data.data.createUser);
     expect({
       email: response.data.data.createUser.email,
       name: response.data.data.createUser.name,
@@ -42,5 +41,4 @@ describe("Test", async () => {
       "birthDate"
     );
   });
-  //inside describe
 });

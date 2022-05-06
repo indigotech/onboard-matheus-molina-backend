@@ -25,9 +25,7 @@ export const resolvers = {
         );
       }
 
-      const hashedPassword = hashPassword({
-        password: data.password,
-      });
+      const hashedPassword = hashPassword(data.password);
 
       const newUser = new User();
       newUser.name = data.name;
