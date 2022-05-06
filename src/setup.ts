@@ -8,9 +8,6 @@ export async function setup() {
 
   const server = new ApolloServer({ typeDefs, resolvers });
 
-  server
-    .listen(parseInt(process.env.ENV_SERVER_PORT!))
-    .then(async ({ url }) => {
-      console.log(`🚀  Server ready at ${url}`);
-    });
+  const { url } = await server.listen(parseInt(process.env.ENV_SERVER_PORT!));
+  console.log(`🚀 Server ready at ${url}`);
 }
