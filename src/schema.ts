@@ -20,7 +20,7 @@ export const typeDefs = gql`
   type User {
     id: Int
     email: String
-    firstName: String
+    name: String
     birthDate: String
   }
 

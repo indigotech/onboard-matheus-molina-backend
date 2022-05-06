@@ -1,29 +1,46 @@
-import axios from "axios";
 import { expect } from "chai";
 import * as dotenv from "dotenv";
 import { before, describe, it } from "mocha";
-import { books } from "../src/database";
+import { AppDataSource } from "../src/data-source";
+import { User } from "../src/entity/User";
+import {
+  CreateUserInput,
+  createUserMutation,
+} from "../src/mutation/create-user.use-case";
 import { setup } from "../src/setup";
 
-describe("Test", () => {
+const TEST_VARIABLE: CreateUserInput = {
+  name: "john-doe",
+  email: "john-doe@email.com",
+  password: "p4ssw0rd",
+  birthDate: "00-00-0000",
+};
+
+describe("Test", async () => {
   before(async () => {
     dotenv.config({ path: __dirname + "/../test.env" });
     await setup();
+    await AppDataSource.manager.clear(User);
   });
 
-  it("Should get books", async () => {
-    const response = await axios.post("http://localhost:4001/graphql", {
-      operationName: null,
-      variables: {},
-      query: `
-          query {
-            books {
-              title
-              author
-            }
-          }
-        `,
+  it("Should Create User", async () => {
+    const response = await createUserMutation(TEST_VARIABLE);
+    console.log(response.data.data.createUser);
+    expect({
+      email: response.data.data.createUser.email,
+      name: response.data.data.createUser.name,
+      birthDate: response.data.data.createUser.birthDate,
+    }).to.be.deep.equal({
+      email: TEST_VARIABLE.email,
+      name: TEST_VARIABLE.name,
+      birthDate: TEST_VARIABLE.birthDate,
     });
-    expect(response.data.data.books).to.be.deep.eq(books);
+    expect(response.data.data.createUser).to.have.all.keys(
+      "id",
+      "name",
+      "email",
+      "birthDate"
+    );
   });
+  //inside describe
 });

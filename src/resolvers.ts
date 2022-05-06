@@ -1,5 +1,5 @@
 import { hashPassword } from "./cryptography/password-encription";
-import { ConfigAppDataSource } from "./data-source";
+import { AppDataSource } from "./data-source";
 import { books } from "./database";
 import { User } from "./entity/User";
 import { isRepeatedEmail } from "./validators/email-validator";
@@ -31,7 +31,7 @@ export const resolvers = {
 
       const AppDataSource = await ConfigAppDataSource()
       const newUser = new User();
-      newUser.firstName = data.name;
+      newUser.name = data.name;
       newUser.birthDate = data.birthDate;
       newUser.email = data.email;
       newUser.password = hashedPassword.hashedPassword;

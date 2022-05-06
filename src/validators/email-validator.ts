@@ -1,9 +1,7 @@
-import { ConfigAppDataSource } from "../data-source";
+import { AppDataSource, ConfigAppDataSource } from "../data-source";
 import { User } from "../entity/User";
 
-export const isRepeatedEmail = async (email: string) => {
-  const AppDataSource = await ConfigAppDataSource();
-  const users = await AppDataSource.manager.find(User);
-  const repeatedEmail = users.filter((user) => user.email === email);
-  return !!repeatedEmail.length;
+export const isRepeatedEmail = async (inputEmail: string) => {
+  const registeredEmailUser = await AppDataSource.manager.findOneBy(User,{email: inputEmail});
+  return !!registeredEmailUser;
 };
