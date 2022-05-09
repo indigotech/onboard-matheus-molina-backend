@@ -1,11 +1,6 @@
 import axios from "axios";
+import { CreateUserInput } from "../../src/mutation/create-user.use-case";
 
-export interface CreateUserInput {
-  name: string;
-  email: string;
-  birthDate: string;
-  password: string;
-}
 
 export async function testCreateUserMutation(input: CreateUserInput) {
   const response = await axios.post("http://localhost:4001/graphql", {

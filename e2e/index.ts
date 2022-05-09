@@ -4,8 +4,10 @@ import { before, describe, it } from "mocha";
 import { AppDataSource } from "../src/data-source";
 import { User } from "../src/entity/User";
 import { CreateUserInput } from "../src/mutation/create-user.use-case";
+import { mock_logged_user } from "../src/mutation/login.use-case";
 import { setup } from "../src/setup";
-import { testCreateUserMutation } from "./create-user-test";
+import { testCreateUserMutation } from "./mutations/create-user-test";
+import { testLogin } from "./mutations/login-test";
 
 const TEST_VARIABLE: CreateUserInput = {
   name: "john-doe",
@@ -39,5 +41,15 @@ describe("Test", async () => {
       "birthDate"
     );
     expect(!!userCreated).to.be.true;
+  });
+
+  it("Should Login", async () => {
+    const response = await testLogin({
+      name: "User Name",
+      email: "User e-mail",
+      birthDate: "04-25-1990",
+      password: "p4ssw0rd",
+    });
+    expect(response.data.data.login).to.be.deep.equal(mock_logged_user);
   });
 });
