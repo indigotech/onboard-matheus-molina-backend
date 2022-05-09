@@ -16,8 +16,8 @@ export const AppDataSource = new DataSource({
 
 export async function ConfigAppDataSource() {
   await AppDataSource.setOptions({
-    database: process.env.ENV_DATABASE,
-    port: parseInt(process.env.ENV_PORT!),
+    database: process.env.DATABASE,
+    port: parseInt(process.env.DATABASE_PORT!),
   })
     .initialize()
     .catch((error) => console.log(error));
