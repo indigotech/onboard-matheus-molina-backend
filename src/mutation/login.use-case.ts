@@ -9,6 +9,7 @@ import { CreateUserInput } from "./create-user.use-case";
 interface LoginInput {
   email: string;
   password: string;
+  rememberMe?: boolean;
 }
 export async function login(input: LoginInput) {
   const registeredEmailUser = await AppDataSource.manager.findOneBy(User, {
@@ -16,8 +17,10 @@ export async function login(input: LoginInput) {
   });
   const isValidPassword = validatePassword(input.password);
 
-  const token = jwt.sign({ name: input.name }, "secretKey", {
-    expiresIn: 1200,
+  const expirationTime = input.rememberMe ? "7d" : 1200;
+
+  const token = jwt.sign({ name: registeredEmailUser?.name }, "secretKey", {
+    expiresIn: expirationTime,
   });
 
   if (!isValidPassword) {
