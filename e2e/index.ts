@@ -12,7 +12,7 @@ import { setup } from "../src/setup";
 const TEST_VARIABLE: CreateUserInput = {
   name: "john-doe",
   email: "john-doe@email.com",
-  password: "p4ssw0rd",
+  password: "psswrd",
   birthDate: "00-00-0000",
 };
 
