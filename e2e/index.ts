@@ -27,6 +27,7 @@ describe("Test", async () => {
     const response = await createUserMutation(TEST_VARIABLE);
     const { id, ...otherFields } = response.data.data.createUser;
     const { password, ...inputOtherFields } = TEST_VARIABLE;
+    const userCreated = await AppDataSource.manager.findOneBy(User, { id: id });
 
     expect(otherFields).to.be.deep.equal(inputOtherFields);
 
@@ -38,5 +39,6 @@ describe("Test", async () => {
       "email",
       "birthDate"
     );
+    expect(!!userCreated).to.be.true;
   });
 });
