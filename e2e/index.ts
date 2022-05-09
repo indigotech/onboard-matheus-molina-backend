@@ -43,11 +43,13 @@ describe("Test", async () => {
 
   it("Should Login", async () => {
     const response = await testLogin({
-      name: "User Name",
-      email: "User e-mail",
-      birthDate: "04-25-1990",
-      password: "p4ssw0rd",
+      email: "john-doe@email.com",
+      password: "passw0rd",
     });
-    expect(response.data.data.login).to.be.deep.equal(mock_logged_user);
+
+    const { token, user } = response.data.data.login;
+
+    expect(token).to.be.a("string");
+    expect(user).to.have.all.keys("id", "name", "email", "birthDate");
   });
 });

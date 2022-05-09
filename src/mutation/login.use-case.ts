@@ -6,7 +6,7 @@ import { CustomError } from "../errors/login-error-class";
 import { validatePassword } from "../validators/password-validator";
 import { CreateUserInput } from "./create-user.use-case";
 
-interface LoginInput {
+export interface LoginInput {
   email: string;
   password: string;
   rememberMe?: boolean;
