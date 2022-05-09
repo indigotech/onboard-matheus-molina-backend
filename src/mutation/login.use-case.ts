@@ -1,4 +1,5 @@
 import * as crypto from "crypto";
+import * as jwt from "jsonwebtoken";
 import { AppDataSource } from "../data-source";
 import { User } from "../entity/User";
 import { CustomError } from "../errors/login-error-class";
@@ -14,6 +15,10 @@ export async function login(input: LoginInput) {
     email: input.email,
   });
   const isValidPassword = validatePassword(input.password);
+
+  const token = jwt.sign({ name: input.name }, "secretKey", {
+    expiresIn: 1200,
+  });
 
   if (!isValidPassword) {
     throw new CustomError(
@@ -32,7 +37,7 @@ export async function login(input: LoginInput) {
   const hashedPassword = hash.digest("hex");
 
   if (hashedPassword === registeredEmailUser?.password) {
-    return { user: registeredEmailUser, token: "" };
+    return { user: registeredEmailUser, token: token };
   } else {
     throw new CustomError(401, "Wrong Email and/or Paassword");
   }
