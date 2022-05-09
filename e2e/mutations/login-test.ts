@@ -6,13 +6,11 @@ export async function testLogin(input: CreateUserInput) {
     operationName: null,
     variables: {
       data: {
-        name: input.name,
         email: input.email,
-        birthDate: input.birthDate,
         password: input.password,
       },
     },
-    query: `mutation Login($data:UserInput!) {
+    query: `mutation Login($data:LoginInput!) {
         login(
           data: $data
         ) {

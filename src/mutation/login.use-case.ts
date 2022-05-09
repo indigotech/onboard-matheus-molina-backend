@@ -1,7 +1,8 @@
-import { CreateUserInput } from "./create-user.use-case";
-
-export async function login(data: CreateUserInput) {
-  console.log({ data });
+interface LoginInput {
+  email: string;
+  password: string;
+}
+export async function login(input: LoginInput) {
   return mock_logged_user;
 }
 
