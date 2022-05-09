@@ -1,9 +1,24 @@
+import * as crypto from "crypto";
+import { AppDataSource } from "../data-source";
+import { User } from "../entity/User";
+
 interface LoginInput {
   email: string;
   password: string;
 }
 export async function login(input: LoginInput) {
-  return mock_logged_user;
+  const registeredEmailUser = await AppDataSource.manager.findOneBy(User, {
+    email: input.email,
+  });
+  const { salt } = registeredEmailUser!;
+
+  const hash = crypto.createHash("sha256");
+  hash.update(salt + input.password);
+  const hashedPassword = hash.digest("hex");
+
+  if (hashedPassword === registeredEmailUser?.password) {
+    return { user: registeredEmailUser, token: "" };
+  }
 }
 
 export const mock_logged_user = {
