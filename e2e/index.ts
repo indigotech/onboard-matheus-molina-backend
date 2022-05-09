@@ -25,15 +25,13 @@ describe("Test", async () => {
 
   it("Should Create User", async () => {
     const response = await createUserMutation(TEST_VARIABLE);
-    expect({
-      email: response.data.data.createUser.email,
-      name: response.data.data.createUser.name,
-      birthDate: response.data.data.createUser.birthDate,
-    }).to.be.deep.equal({
-      email: TEST_VARIABLE.email,
-      name: TEST_VARIABLE.name,
-      birthDate: TEST_VARIABLE.birthDate,
-    });
+    const { id, ...otherFields } = response.data.data.createUser;
+    const { password, ...inputOtherFields } = TEST_VARIABLE;
+
+    expect(otherFields).to.be.deep.equal(inputOtherFields);
+
+    expect(id).to.be.a("number");
+
     expect(response.data.data.createUser).to.have.all.keys(
       "id",
       "name",

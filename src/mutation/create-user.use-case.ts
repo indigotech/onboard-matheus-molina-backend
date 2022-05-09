@@ -11,12 +11,7 @@ export async function createUserMutation(input: CreateUserInput) {
   const response = await axios.post("http://localhost:4001/graphql", {
     operationName: null,
     variables: {
-      data: {
-        name: input.name,
-        email: input.email,
-        birthDate: input.birthDate,
-        password: input.password,
-      },
+      data: input,
     },
     query: `mutation CreateUser($data: UserInput!) {
         createUser(

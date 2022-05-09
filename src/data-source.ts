@@ -4,9 +4,6 @@ import { User } from "./entity/User";
 
 export const AppDataSource = new DataSource({
   type: "postgres",
-  host: "localhost",
-  username: "MaTMolina",
-  password: "taqtilew415",
   synchronize: true,
   logging: false,
   entities: [User],
@@ -15,10 +12,15 @@ export const AppDataSource = new DataSource({
 });
 
 export async function ConfigAppDataSource() {
-  await AppDataSource.setOptions({
-    database: process.env.DATABASE,
-    port: parseInt(process.env.DATABASE_PORT!),
-  })
-    .initialize()
-    .catch((error) => console.log(error));
+  try {
+    await AppDataSource.setOptions({
+      host: process.env.HOST,
+      username: process.env.USERNAME,
+      password: process.env.PASSWORD,
+      database: process.env.DATABASE,
+      port: parseInt(process.env.DATABASE_PORT!),
+    }).initialize();
+  } catch (error) {
+    console.log("Erro no DataBase:", error);
+  }
 }
