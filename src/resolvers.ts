@@ -2,6 +2,7 @@ import { hashPassword } from "./cryptography/password-encription";
 import { AppDataSource } from "./data-source";
 import { books } from "./database";
 import { User } from "./entity/User";
+import { CustomError } from "./errors/login-error-class";
 import { isRepeatedEmail } from "./validators/email-validator";
 import { validatePassword } from "./validators/password-validator";
 
@@ -15,12 +16,14 @@ export const resolvers = {
       const repeatedEmail = await isRepeatedEmail(data.email);
 
       if (!validPassword) {
-        throw new Error(
+        throw new CustomError(
+          400,
           "The password must contain at least 6 characters, of which 1 must be a letter and 1 a digit"
         );
       }
       if (repeatedEmail) {
-        throw new Error(
+        throw new CustomError(
+          400,
           "This email has already been registered by another user"
         );
       }
