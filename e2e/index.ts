@@ -3,16 +3,14 @@ import * as dotenv from "dotenv";
 import { before, describe, it } from "mocha";
 import { AppDataSource } from "../src/data-source";
 import { User } from "../src/entity/User";
-import {
-  CreateUserInput,
-  createUserMutation,
-} from "../src/mutation/create-user.use-case";
+import { CreateUserInput } from "../src/mutation/create-user.use-case";
 import { setup } from "../src/setup";
+import { testCreateUserMutation } from "./create-user-test";
 
 const TEST_VARIABLE: CreateUserInput = {
   name: "john-doe",
   email: "john-doe@email.com",
-  password: "psswrd",
+  password: "passw0rd",
   birthDate: "00-00-0000",
 };
 
@@ -24,7 +22,8 @@ describe("Test", async () => {
   });
 
   it("Should Create User", async () => {
-    const response = await createUserMutation(TEST_VARIABLE);
+    const response = await testCreateUserMutation(TEST_VARIABLE);
+
     const { id, ...otherFields } = response.data.data.createUser;
     const { password, ...inputOtherFields } = TEST_VARIABLE;
 
@@ -38,5 +37,8 @@ describe("Test", async () => {
       "email",
       "birthDate"
     );
+
+    
+
   });
 });
