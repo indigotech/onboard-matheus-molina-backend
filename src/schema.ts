@@ -6,6 +6,14 @@ export const typeDefs = gql`
     author: String
   }
 
+  input GetUserInput {
+    id: Int
+  }
+
+  type Query {
+    getUser(data: GetUserInput!): User
+  }
+
   type Query {
     books: [Book]
   }
@@ -27,6 +35,7 @@ export const typeDefs = gql`
   input LoginInput {
     email: String
     password: String
+    rememberMe: Boolean
   }
 
   type LoginType {
