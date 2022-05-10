@@ -19,4 +19,5 @@ export async function saveUserToDB() {
   TestUser.salt = salt;
 
   await AppDataSource.manager.save(TestUser);
+  return TestUser;
 }
