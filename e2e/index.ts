@@ -43,7 +43,7 @@ describe("Test", async () => {
     expect(!!userCreated).to.be.true;
   });
 
-  it("Should Login", async () => {
+  it("Should Login Successfully Given A Valid Input", async () => {
     const response = await testLogin({
       name: "User Name",
       email: "User e-mail",
