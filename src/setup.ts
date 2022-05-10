@@ -10,7 +10,8 @@ export async function setup() {
 
   const server = new ApolloServer({
     typeDefs,
-    resolvers
+    resolvers,
+    formatError: formatError,
   });
 
   const { url } = await server.listen(parseInt(process.env.SERVER_PORT!));
