@@ -1,9 +1,8 @@
 import { ApolloServer } from "apollo-server";
-import { typeDefs } from "./schema";
-import { resolvers } from "./resolvers";
 import { ConfigAppDataSource } from "./data-source";
-import { GraphQLError } from "graphql";
 import { formatError } from "./errors/erorr-handler";
+import { resolvers } from "./resolvers";
+import { typeDefs } from "./schema";
 
 export async function setup() {
   await ConfigAppDataSource();
@@ -12,6 +11,9 @@ export async function setup() {
     typeDefs,
     resolvers,
     formatError: formatError,
+    context: ({ req }) => ({
+      authorization: req.headers.authorization,
+    }),
   });
 
   const { url } = await server.listen(parseInt(process.env.SERVER_PORT!));

@@ -1,10 +1,9 @@
 import * as crypto from "crypto";
-import * as jwt from "jsonwebtoken";
+import { generateToken } from "../cryptography/create-token";
 import { AppDataSource } from "../data-source";
 import { User } from "../entity/User";
 import { CustomError } from "../errors/login-error-class";
 import { validatePassword } from "../validators/password-validator";
-import { CreateUserInput } from "./create-user.use-case";
 
 export interface LoginInput {
   email: string;
@@ -19,9 +18,11 @@ export async function login(input: LoginInput) {
 
   const expirationTime = input.rememberMe ? "7d" : 1200;
 
-  const token = jwt.sign({ name: registeredEmailUser?.name }, "secretKey", {
-    expiresIn: expirationTime,
-  });
+  const token = generateToken(
+    registeredEmailUser!,
+    "secretKey",
+    expirationTime
+  );
 
   if (!isValidPassword) {
     throw new CustomError(
@@ -45,13 +46,3 @@ export async function login(input: LoginInput) {
     throw new CustomError(401, "Wrong Email and/or Paassword");
   }
 }
-
-export const mock_logged_user = {
-  user: {
-    id: 12,
-    name: "User Name",
-    email: "User e-mail",
-    birthDate: "04-25-1990",
-  },
-  token: "the_token",
-};

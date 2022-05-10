@@ -7,7 +7,8 @@ export const resolvers = {
     books: () => books,
   },
   Mutation: {
-    createUser: async (_: any, { data }: any) => createUser(data),
+    createUser: async (_: any, { data }: any, context: any) =>
+      createUser(data, context.authorization),
     login: async (_: any, { data }: any) => login(data),
   },
 };
