@@ -130,5 +130,26 @@ describe("Test", async () => {
         birthDate: TestUser.birthDate,
       });
     });
+    
+    it("Should Not Get User By Id Because No such Id Exists", async () => {
+      const response = await testGetUserQuery(0, token);
+
+      expect(response.data.errors).to.deep.include({
+        message: "No User with given Id",
+        code: 400,
+      });
+    });
+
+    it("Should Not Get User By Id Because Non Authenticated", async () => {
+      const response = await testGetUserQuery(TestUser.id, "token");
+
+      expect({
+        message: response.data.errors[0].message,
+        code: response.data.errors[0].code,
+      }).to.be.deep.equal({
+        message: "Invalid Token",
+        code: 401,
+      });
+    });
   });
 });
