@@ -16,7 +16,6 @@ export function verifyToken(
     const decoded = jwt.verify(token, key) as DecodedPayload;
     return { ...decoded };
   } catch (error: any) {
-    console.log(error);
-    throw new CustomError(401, error.message)
+    throw new CustomError(401, "Invalid Token", error.message);
   }
 }

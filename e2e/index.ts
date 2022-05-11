@@ -5,6 +5,7 @@ import { generateToken } from "../src/cryptography/create-token";
 import { verifyToken } from "../src/cryptography/verify-token";
 import { AppDataSource } from "../src/data-source";
 import { User } from "../src/entity/User";
+import { CustomError } from "../src/errors/login-error-class";
 import { CreateUserInput } from "../src/mutation/create-user.use-case";
 import { setup } from "../src/setup";
 import { testCreateUserMutation } from "./mutations/create-user-test";
@@ -19,7 +20,11 @@ const TEST_VARIABLE: CreateUserInput = {
   birthDate: "00-00-0000",
 };
 
-describe("Test", async () => {
+//-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+//Successfull cases
+//-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+
+describe("Test of Success", async () => {
   let token: string;
   let TestUser: User;
 
@@ -75,6 +80,69 @@ describe("Test", async () => {
       name: TestUser.name,
       email: TestUser.email,
       birthDate: TestUser.birthDate,
+    });
+  });
+});
+
+//-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+//Failing cases
+//-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+
+describe("Test of Failure", async () => {
+  let token: string;
+  let TestUser: User;
+
+  beforeEach(async () => {
+    await AppDataSource.manager.clear(User);
+    TestUser = await saveUserToDB();
+    token = generateToken(TestUser, "secretKey", 1200);
+  });
+
+  it("Should Fail Login Because Wrong Password Input", async () => {
+    const response = await testLogin({
+      email: TestUser.email,
+      password: TEST_USER.password + "a",
+    });
+
+    const errors = response.data.errors;
+    expect(errors[0].code).to.be.equal(401);
+  });
+
+  it("Should Fail to Create User Because Email Already Registered", async () => {
+    const FAILING_TEST_USER = { ...TEST_VARIABLE, email: TEST_USER.email };
+
+    const response = await testCreateUserMutation(FAILING_TEST_USER, token);
+
+    expect(response.data.errors).to.be.deep.equal([
+      {
+        code: 400,
+        message: "This email has already been registered by another user",
+      },
+    ]);
+  });
+
+  it("Should Fail to Create User Because Wrong Password Format", async () => {
+    const FAILING_TEST_USER = { ...TEST_VARIABLE, password: "password" };
+
+    const response = await testCreateUserMutation(FAILING_TEST_USER, token);
+
+    expect(response.data.errors).to.be.deep.equal([
+      {
+        code: 400,
+        message:
+          "The password must contain at least 6 characters, of which 1 must be a letter and 1 a digit",
+      },
+    ]);
+  });
+
+  it("Should Fail to Create User Because token non authenticated", async () => {
+    const response = await testCreateUserMutation(TEST_VARIABLE, "token");
+    expect({
+      message: response.data.errors[0].message,
+      code: response.data.errors[0].code,
+    }).to.be.deep.equal({
+      message: "Invalid Token",
+      code: 401,
     });
   });
 });
