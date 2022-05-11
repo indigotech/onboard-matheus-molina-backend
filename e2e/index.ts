@@ -5,7 +5,6 @@ import { generateToken } from "../src/cryptography/create-token";
 import { verifyToken } from "../src/cryptography/verify-token";
 import { AppDataSource } from "../src/data-source";
 import { User } from "../src/entity/User";
-import { CustomError } from "../src/errors/login-error-class";
 import { CreateUserInput } from "../src/mutation/create-user.use-case";
 import { setup } from "../src/setup";
 import { testCreateUserMutation } from "./mutations/create-user-test";
@@ -137,6 +136,27 @@ describe("Test of Failure", async () => {
 
   it("Should Fail to Create User Because token non authenticated", async () => {
     const response = await testCreateUserMutation(TEST_VARIABLE, "token");
+    expect({
+      message: response.data.errors[0].message,
+      code: response.data.errors[0].code,
+    }).to.be.deep.equal({
+      message: "Invalid Token",
+      code: 401,
+    });
+  });
+
+  it("Should Not Get User By Id Because No such Id Exists", async () => {
+    const response = await testGetUserQuery(0, token);
+
+    expect(response.data.errors).to.deep.include({
+      message: "No User with given Id",
+      code: 400,
+    });
+  });
+
+  it("Should Not Get User By Id Because Non Authenticated", async () => {
+    const response = await testGetUserQuery(TestUser.id, "token");
+
     expect({
       message: response.data.errors[0].message,
       code: response.data.errors[0].code,
