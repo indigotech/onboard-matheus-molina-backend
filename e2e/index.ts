@@ -41,7 +41,6 @@ describe("Test", async () => {
     expect(token).to.be.a("string");
 
     const decoded = verifyToken(token, "secretKey");
-    console.log(token);
     expect({ id: decoded?.id, name: decoded?.name }).to.be.deep.equal({
       id: user.id,
       name: user.name,

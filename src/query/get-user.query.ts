@@ -13,5 +13,10 @@ export async function getUser(id: number, token: string) {
   }
 
   const requestedUser = await AppDataSource.manager.findOneBy(User, { id: id });
+
+  if(!requestedUser){
+    throw new CustomError(400, 'No User with given Id')
+  }
+
   return requestedUser;
 }
