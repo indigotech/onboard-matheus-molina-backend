@@ -1,7 +1,7 @@
 import axios from "axios";
-import { CreateUserInput } from "../../src/mutation/create-user.use-case";
+import { LoginInput } from "../../src/mutation/login.use-case";
 
-export async function testLogin(input: CreateUserInput) {
+export async function testLogin(input: LoginInput) {
   const response = await axios.post("http://localhost:4001/graphql", {
     operationName: null,
     variables: {
