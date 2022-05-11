@@ -7,7 +7,8 @@
   "scripts": {
     "start": "docker-compose up -d && ts-node-dev --respawn --transpile-only src/index.ts",
     "typeorm": "typeorm-ts-node-commonjs",
-    "test": "ts-mocha e2e/index.ts"
+    "test": "ts-mocha e2e/index.ts",
+    "seed": "ts-node-dev  src/seeder/seeder"
   },
   "repository": {
     "type": "git",
@@ -37,6 +38,7 @@
     "typeorm": "0.3.6"
   },
   "devDependencies": {
+    "@faker-js/faker": "^6.3.1",
     "@types/chai": "4.3.1",
     "@types/jsonwebtoken": "8.5.8",
     "@types/mocha": "9.1.1",
