@@ -47,11 +47,13 @@ describe("Test", async () => {
   it("Should Create User", async () => {
     const response = await testCreateUserMutation(TEST_VARIABLE, globalToken);
 
-    const { id, ...otherFields } = response.data.data.createUser;
+    const { id, ...responseOtherFields } = response.data.data.createUser;
+   
+
     const { password, ...inputOtherFields } = TEST_VARIABLE;
     const userCreated = await AppDataSource.manager.findOneBy(User, { id: id });
 
-    expect(otherFields).to.be.deep.equal(inputOtherFields);
+    expect(responseOtherFields).to.be.deep.equal(inputOtherFields);
 
     expect(id).to.be.a("number");
 
