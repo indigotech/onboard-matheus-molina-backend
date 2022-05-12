@@ -18,6 +18,22 @@ export const typeDefs = gql`
     books: [Book]
   }
 
+  input GetUserListInput {
+    limit: Int
+    page: Int
+  }
+
+  type UserList {
+    users: [User]
+    page: Int
+    hasNextPage: Boolean
+    hasPreviousPage: Boolean
+  }
+
+  type Query {
+    getUserList(data: GetUserListInput): UserList
+  }
+
   input UserInput {
     email: String
     name: String
