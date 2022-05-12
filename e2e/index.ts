@@ -290,4 +290,13 @@ describe("Test", async () => {
       });
     });
   });
+
+  describe("Create Address in Database with relation to user", async () => {
+    it("Should create 2 adresses with userId equal to TestUser.id", async () => {
+      const addresses = await AppDataSource.manager.findBy(Address, {
+        user: TestUser,
+      });
+      expect(addresses.length).to.be.eq(2);
+    });
+  });
 });
