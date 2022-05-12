@@ -8,6 +8,7 @@ import { CreateUserInput } from "../src/mutation/create-user.use-case";
 import { setup } from "../src/setup";
 import { testCreateUserMutation } from "./mutations/create-user-test";
 import { testLogin } from "./mutations/login-test";
+import { testGetUserQuery } from "./query/get-user-test";
 import { saveUserToDB, TEST_USER } from "./save-user-to-db";
 
 const TEST_VARIABLE: CreateUserInput = {
@@ -19,6 +20,7 @@ const TEST_VARIABLE: CreateUserInput = {
 
 describe("Test", async () => {
   let globalToken: string;
+  let globalId: number;
   before(async () => {
     dotenv.config({ path: __dirname + "/../test.env" });
     await setup();
@@ -34,13 +36,16 @@ describe("Test", async () => {
 
     const { token, user } = response.data.data.login;
     globalToken = token;
+    globalId = user.id;
 
     expect(token).to.be.a("string");
+
     const decoded = verifyToken(token, "secretKey");
     expect({ id: decoded?.id, name: decoded?.name }).to.be.deep.equal({
       id: user.id,
       name: user.name,
     });
+
     expect(user).to.have.all.keys("id", "name", "email", "birthDate");
   });
 
@@ -76,5 +81,16 @@ describe("Test", async () => {
 
     expect(token).to.be.a("string");
     expect(user).to.have.all.keys("id", "name", "email", "birthDate");
+  });
+
+  it("Should Get User By Id", async () => {
+    const response = await testGetUserQuery(globalId, globalToken);
+    
+    expect(response.data.data.getUser).to.be.deep.equal({
+      id: globalId,
+      name: TEST_USER.name,
+      email: TEST_USER.email,
+      birthDate: TEST_USER.birthDate,
+    });
   });
 });
