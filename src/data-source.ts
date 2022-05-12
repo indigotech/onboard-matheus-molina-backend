@@ -1,12 +1,14 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
+import { saveUserToDB } from "../e2e/save-user-to-db";
+import { Address } from "./entity/address";
 import { User } from "./entity/User";
 
 export const AppDataSource = new DataSource({
   type: "postgres",
   synchronize: true,
   logging: false,
-  entities: [User],
+  entities: [User, Address],
   migrations: [],
   subscribers: [],
 });

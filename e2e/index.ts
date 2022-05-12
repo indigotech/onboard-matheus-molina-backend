@@ -5,6 +5,7 @@ import { before, describe } from "mocha";
 import { generateToken } from "../src/cryptography/create-token";
 import { hashPassword } from "../src/cryptography/password-encription";
 import { AppDataSource } from "../src/data-source";
+import { Address } from "../src/entity/address";
 import { User } from "../src/entity/User";
 import { CreateUserInput } from "../src/mutation/create-user.use-case";
 import { populateDB } from "../src/seeder/seeder";
@@ -32,7 +33,8 @@ describe("Test", async () => {
   });
 
   beforeEach(async () => {
-    await AppDataSource.manager.clear(User);
+    await AppDataSource.manager.delete(Address, {});
+    await AppDataSource.manager.delete(User, {});
     TestUser = await saveUserToDB();
     token = generateToken(TestUser, "secretKey", 1200);
   });
@@ -200,6 +202,15 @@ describe("Test", async () => {
         code: 400,
         message: "Index of page has to be greater than 0",
       });
+    });
+  });
+
+  describe("Create Address in Database with relation to user", async () => {
+    it("Should create 2 adresses with userId equal to TestUser.id", async () => {
+      const addresses = await AppDataSource.manager.findBy(Address, {
+        user: TestUser,
+      });
+      expect(addresses.length).to.be.eq(2);
     });
   });
 });
