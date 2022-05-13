@@ -5,6 +5,16 @@ export const typeDefs = gql`
     title: String
     author: String
   }
+  type Address {
+    id: Int
+    cep: String
+    street: String
+    complement: String
+    neighborhood: String
+    city: String
+    state: String
+    user: User
+  }
 
   input GetUserInput {
     id: Int
@@ -46,6 +56,7 @@ export const typeDefs = gql`
     email: String
     name: String
     birthDate: String
+    addresses: [Address]
   }
 
   input LoginInput {

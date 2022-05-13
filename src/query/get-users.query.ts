@@ -39,6 +39,9 @@ export async function getUserList(
     },
     take: numberOfUsers,
     skip: offset,
+    relations: {
+      addresses: true,
+    },
   });
 
   return { users: requestedUsers, page, hasNextPage, hasPreviousPage };
