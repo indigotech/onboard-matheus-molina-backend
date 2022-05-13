@@ -6,9 +6,6 @@ import { User } from "../src/entity/User";
 import { CreateUserInput } from "../src/mutation/create-user.use-case";
 import { setup } from "../src/setup";
 import { saveUserToDB } from "./save-user-to-db";
-import { CreateUserTest } from "./scripts/create-user-script";
-import { GetUserTest } from "./scripts/get-user-script";
-import { LoginTest } from "./scripts/login-script";
 
 export const TEST_VARIABLE: CreateUserInput = {
   name: "john-doe",
@@ -19,7 +16,7 @@ export const TEST_VARIABLE: CreateUserInput = {
 
 describe("Test", async () => {
   let token: string;
-  let TestUser: User;
+  let testUser: User;
 
   before(async () => {
     dotenv.config({ path: __dirname + "/../test.env" });
@@ -28,19 +25,19 @@ describe("Test", async () => {
 
   beforeEach(async () => {
     await AppDataSource.manager.clear(User);
-    TestUser = await saveUserToDB();
-    token = generateToken(TestUser, "secretKey", 1200);
+    testUser = await saveUserToDB();
+    token = generateToken(testUser, "secretKey", 1200);
   });
 
   describe("Login Test", async () => {
-    await LoginTest();
+    require('./scripts/login-script');
   });
 
   describe("CreateUser Test", async () => {
-    await CreateUserTest();
+    require('./scripts/create-user-script');
   });
 
   describe("GetUser Test", async () => {
-    await GetUserTest();
+    require('./scripts/get-user-script')
   });
 });
