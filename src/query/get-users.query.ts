@@ -1,54 +1,45 @@
-import { verifyToken } from "../cryptography/verify-token";
 import { AppDataSource } from "../data-source";
 import { User } from "../entity/User";
 import { CustomError } from "../errors/login-error-class";
-import { isAuthorized } from "../validators/authorization-validator";
+import { checkToken } from "../utils/check-token";
 
 export async function getUserList(
   token: string,
   options?: { page?: number; limit?: number }
 ) {
-  let numberOfUsers: number = options?.limit ? options.limit : 10;
-  const page: number = options?.page
-    ? options.page <= 0
-      ? 1
-      : options.page
-    : 1;
-  const offset: number = (page - 1) * numberOfUsers;
+  await checkToken(token);
+  let page: number;
+  if (options?.page! <= 0) {
+    throw new CustomError(400, "Index of page has to be greater than 0");
+  } else {
+    page = options?.page ?? 1;
+  }
+  let numberOfUsers = options?.limit ?? 10;
+  const offset = (page - 1) * numberOfUsers;
   const DataSourceLength = await AppDataSource.manager.count(User);
-  const hasPreviousPage: boolean = page != 1;
-  const hasNextPage: boolean = offset + numberOfUsers < DataSourceLength;
-  const lastPage: number = Math.floor(DataSourceLength / 10) + 1;
+  const hasPreviousPage = page !== 1;
+  const hasNextPage = offset + numberOfUsers < DataSourceLength;
+  const lastPage = Math.floor(DataSourceLength / numberOfUsers) + 1;
 
   if (numberOfUsers > DataSourceLength) {
-    throw new CustomError(400, "Requisition over the limit");
-  }
-
-  if (page > lastPage) {
-    throw new CustomError(
-      400,
-      "This Page is over the limit and does not exist"
-    );
-  }
-
-  const decoded = await verifyToken(token, "secretKey");
-  const authorized = await isAuthorized(decoded!.id);
-
-  if (!authorized) {
-    throw new CustomError(401, "User Unauthorized, please create User");
+    numberOfUsers = DataSourceLength;
   }
 
   if (page === lastPage) {
     numberOfUsers = DataSourceLength - offset;
   }
 
+  if (page > lastPage) {
+    return { users: [], page, hasNextPage: false };
+  }
+
   const requestedUsers = await AppDataSource.manager.find(User, {
+    order: {
+      name: "ASC",
+    },
     take: numberOfUsers,
     skip: offset,
   });
-  requestedUsers.sort((a, b) =>
-    a.name > b.name ? 1 : b.name > a.name ? -1 : 0
-  );
 
   return { users: requestedUsers, page, hasNextPage, hasPreviousPage };
 }

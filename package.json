@@ -8,7 +8,7 @@
     "start": "docker-compose up -d && ts-node-dev --respawn --transpile-only src/index.ts",
     "typeorm": "typeorm-ts-node-commonjs",
     "test": "ts-mocha e2e/index.ts",
-    "seed": "ts-node-dev  src/seeder/seeder"
+    "seed": "ts-node-dev  src/seeder/index.ts"
   },
   "repository": {
     "type": "git",

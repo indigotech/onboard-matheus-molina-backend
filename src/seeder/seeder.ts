@@ -4,11 +4,8 @@ import { hashPassword } from "../cryptography/password-encription";
 import { AppDataSource, ConfigAppDataSource } from "../data-source";
 import { User } from "../entity/User";
 
-let UserList: User[] = [];
-dotenv.config();
-
-async function populateDB() {
-  await ConfigAppDataSource();
+export async function populateDB() {
+  let UserList: User[] = [];
   for (let i = 0; i < 50; i++) {
     const newUser = new User();
     newUser.name = faker.name.firstName();
@@ -27,5 +24,3 @@ async function populateDB() {
   }
   await AppDataSource.manager.save(UserList);
 }
-
-populateDB();
