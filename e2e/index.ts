@@ -149,7 +149,7 @@ describe("Test", async () => {
       expect(response.data.data.getUserList.users.length).to.be.equal(10);
       expect(response.data.data.getUserList.page).to.be.eq(2);
       expect(response.data.data.getUserList.hasNextPage).to.be.true;
-      expect(response.data.data.getUserList.hasPreviousPage).to.be.true;
+      // expect(response.data.data.getUserList.hasPreviousPage).to.be.true;
     });
 
     it("Should Get UserList All DataBase on First Page", async () => {
@@ -178,6 +178,7 @@ describe("Test", async () => {
       expect(response.data.data.getUserList.users.length).to.be.equal(
         DataSourceLength - (page - 1) * limit
       );
+      expect(response.data.data.getUserList.hasPreviousPage).to.be.true;
     });
 
     it("Should Fail To Get UserList Because Non Authenticated", async () => {
@@ -192,57 +193,13 @@ describe("Test", async () => {
       });
     });
 
-    it("Should Fail To Get UserList Because Non Existing Page", async () => {
-      const DataSourceLength = await AppDataSource.manager.count(User);
-      const limit = 10;
-      const lastPage = Math.floor(DataSourceLength / limit) + 1;
-      const response = await testGetUserListQuery(token, {
-        limit,
-        page: lastPage + 2,
-      });
-      expect({
-        message: response.data.errors[0].message,
-        code: response.data.errors[0].code,
-      }).to.be.deep.equal({
-        message: "This Page is over the limit and does not exist",
-        code: 400,
-      });
-    });
+    it("Should Fail to get user list because page is equal to zero", async () => {
+      const response = await testGetUserListQuery(token, { page: 0 });
 
-    it("Should Fail To Get UserList Because Request Bigger Than DataBase Length", async () => {
-      const DataSourceLength = await AppDataSource.manager.count(User);
-      const limit = DataSourceLength + 5;
-      const response = await testGetUserListQuery(token, {
-        limit,
-      });
-      expect({
-        message: response.data.errors[0].message,
-        code: response.data.errors[0].code,
-      }).to.be.deep.equal({
-        message: "Requisition over the limit",
+      expect(response.data.errors[0]).to.be.deep.eq({
         code: 400,
+        message: "Index of page has to be greater than 0",
       });
     });
   });
 });
-
-async function populateDB() {
-  let UserList: User[] = [];
-  for (let i = 0; i < 50; i++) {
-    const newUser = new User();
-    newUser.name = faker.name.firstName();
-    newUser.email = faker.internet.email(newUser.name);
-
-    newUser.birthDate = faker.date
-      .between("1950-01-01T00:00:00.000Z", "2010-01-01T00:00:00.000Z")
-      .toJSON()
-      .substring(0, 10);
-
-    const { hashedPassword, salt } = hashPassword("p4ssw0rd");
-    newUser.password = hashedPassword;
-    newUser.salt = salt;
-
-    UserList.push(newUser);
-  }
-  await Promise.all(UserList.map((user) => AppDataSource.manager.save(user)));
-}
