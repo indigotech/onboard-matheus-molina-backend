@@ -14,6 +14,11 @@ export async function login(input: LoginInput) {
   const registeredEmailUser = await AppDataSource.manager.findOneBy(User, {
     email: input.email,
   });
+
+  if (!registeredEmailUser) {
+    throw new CustomError(400, "Email not found");
+  }
+
   const isValidPassword = validatePassword(input.password);
 
   const expirationTime = input.rememberMe ? "7d" : 1200;
@@ -31,10 +36,6 @@ export async function login(input: LoginInput) {
     );
   }
 
-  if (!registeredEmailUser) {
-    throw new CustomError(400, "Email not found");
-  }
-
   const { salt } = registeredEmailUser!;
   const hash = crypto.createHash("sha256");
   hash.update(salt + input.password);
@@ -43,6 +44,6 @@ export async function login(input: LoginInput) {
   if (hashedPassword === registeredEmailUser?.password) {
     return { user: registeredEmailUser, token: token };
   } else {
-    throw new CustomError(401, "Wrong Email and/or Paassword");
+    throw new CustomError(401, "Wrong Email and/or Password");
   }
 }
