@@ -34,5 +34,5 @@ export async function populateDB() {
     UserList.push(newUser);
     await AppDataSource.manager.save(address)
   }
-  await AppDataSource.manager.save(UserList);
+  return AppDataSource.manager.save(UserList);
 }

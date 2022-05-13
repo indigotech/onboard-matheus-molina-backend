@@ -18,6 +18,15 @@ export async function testGetUserQuery(id: number, token: string) {
               email
               name
               birthDate
+              addresses {
+                cep
+                state
+                street
+                neighborhood
+                id
+                complement
+                city
+              }
             }
           }
           `,

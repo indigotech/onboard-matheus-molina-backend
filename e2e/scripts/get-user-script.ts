@@ -1,16 +1,18 @@
 import { expect } from "chai";
 import { generateToken } from "../../src/cryptography/create-token";
 import { AppDataSource } from "../../src/data-source";
+import { Address } from "../../src/entity/address";
 import { User } from "../../src/entity/User";
 import { testGetUserQuery } from "../query/get-user-test";
 import { saveUserToDB } from "../save-user-to-db";
 
 export const GetUserTest = function () {
-  describe("CreateUser Mutation Scenario", async () => {
+  describe("GetUser Query Scenario", async () => {
     let token: string;
     let TestUser: User;
     beforeEach(async () => {
-      await AppDataSource.manager.clear(User);
+      await AppDataSource.manager.delete(Address, {});
+      await AppDataSource.manager.delete(User, {});
       TestUser = await saveUserToDB();
       token = generateToken(TestUser, "secretKey", 1200);
     });
@@ -23,7 +25,8 @@ export const GetUserTest = function () {
         name: TestUser.name,
         email: TestUser.email,
         birthDate: TestUser.birthDate,
-      });
+        addresses: TestUser.addresses
+      })
     });
 
     it("Should not get User by Id because no such Id exists", async () => {

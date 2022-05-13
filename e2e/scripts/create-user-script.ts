@@ -1,6 +1,7 @@
 import { expect } from "chai";
 import { generateToken } from "../../src/cryptography/create-token";
 import { AppDataSource } from "../../src/data-source";
+import { Address } from "../../src/entity/address";
 import { User } from "../../src/entity/User";
 import { TEST_VARIABLE } from "../index";
 import { testCreateUserMutation } from "../mutations/create-user-test";
@@ -11,7 +12,8 @@ export const CreateUserTest = function () {
     let token: string;
     let TestUser: User;
     beforeEach(async () => {
-      await AppDataSource.manager.clear(User);
+      await AppDataSource.manager.delete(Address, {});
+      await AppDataSource.manager.delete(User, {});
       TestUser = await saveUserToDB();
       token = generateToken(TestUser, "secretKey", 1200);
     });

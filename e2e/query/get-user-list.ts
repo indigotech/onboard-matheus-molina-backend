@@ -21,6 +21,15 @@ export async function testGetUserListQuery(
             email
             name
             birthDate
+            addresses {
+              cep
+              state
+              street
+              neighborhood
+              id
+              complement
+              city
+            }
           }
           page
           hasNextPage

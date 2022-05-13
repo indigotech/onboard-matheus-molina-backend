@@ -3,6 +3,7 @@ import { describe } from "mocha";
 import { generateToken } from "../../src/cryptography/create-token";
 import { verifyToken } from "../../src/cryptography/verify-token";
 import { AppDataSource } from "../../src/data-source";
+import { Address } from "../../src/entity/address";
 import { User } from "../../src/entity/User";
 import { testLogin } from "../mutations/login-test";
 import { saveUserToDB, TEST_USER } from "../save-user-to-db";
@@ -12,7 +13,8 @@ export const LoginTest = function () {
     let token: string;
     let TestUser: User;
     beforeEach(async () => {
-      await AppDataSource.manager.clear(User);
+      await AppDataSource.manager.delete(Address, {});
+      await AppDataSource.manager.delete(User, {});
       TestUser = await saveUserToDB();
       token = generateToken(TestUser, "secretKey", 1200);
     });

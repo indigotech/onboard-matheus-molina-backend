@@ -21,6 +21,6 @@ export class User {
   @Column()
   salt!: string;
 
-  @OneToMany(() => Address, (address) => address.user, { nullable: true})
+  @OneToMany(() => Address, (address) => address.user, { nullable: true })
   addresses!: Address[];
 }
