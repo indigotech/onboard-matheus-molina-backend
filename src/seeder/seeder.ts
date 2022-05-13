@@ -25,7 +25,7 @@ async function populateDB() {
 
     UserList.push(newUser);
   }
-  await Promise.all(UserList.map((user) => AppDataSource.manager.save(user)));
+  await AppDataSource.manager.save(UserList);
 }
 
 populateDB();
